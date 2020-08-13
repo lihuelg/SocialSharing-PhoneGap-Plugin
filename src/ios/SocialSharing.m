@@ -521,9 +521,14 @@ static NSString *const kShareOptionIPadCoordinates = @"iPadCoordinates";
     if (image != nil && image != (id)[NSNull null]) {
       BOOL canSendAttachments = [[MFMessageComposeViewController class] respondsToSelector:@selector(canSendAttachments)];
       if (canSendAttachments) {
-        NSURL *file = [self getFile:image];
-        if (file != nil) {
-          [picker addAttachmentURL:file withAlternateFilename:nil];
+        NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:image]];          
+        if (imageData != nil) {
+            [picker addAttachmentData:imageData typeIdentifier:@"public.data" filename:@"Image.png"];
+        } else {
+            NSURL *file = [self getFile:image];
+          if (file != nil) {
+            [picker addAttachmentURL:file withAlternateFilename:nil];              
+          }        
         }
       }
     }
